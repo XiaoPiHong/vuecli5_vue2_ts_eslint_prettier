@@ -85,3 +85,14 @@ npx husky add .husky/commit-msg 'npx --no -- commitlint --edit $1'
 ```
 
 6. commit 都会触发 commitlint 中指令来校验提交信息的格式
+
+#### 使用 Husky，commit 前触发 eslint 规则校验（不建议，此方式 eslint 会检测项目所有文件，项目大时用的时间会过长）
+
+1. 添加钩子
+
+```bash
+npx husky add .husky/pre-commit "npm run lint"
+```
+
+2. 如果有错误，git hooks 会在提交前运行 ESLint 并抛出错误，并阻止 git commit
+坑：要取消lint校验后自动修复，否则lint校验后自动修复成功后能commit成功
