@@ -30,6 +30,29 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### Project Initialization Process
 
+#### create project
+
+1. 使用 vue cli5 创建项目
+
+2. 依赖：vue2.0 scss eslint+prettier ts
+
+#### vscode 插件准备
+
+1. 插件：Stylelint、ESLint、Prettier - Code formatter
+
+2. 插件配置
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": true
+  },
+  "stylelint.validate": ["css", "scss", "less", "vue"]
+}
+```
+
 #### 安装 commitizen 规范 Git 提交说明
 
 1. 安装 commitizen 作为开发依赖
@@ -95,7 +118,7 @@ npx husky add .husky/pre-commit "npm run lint"
 ```
 
 2. 如果有错误，git hooks 会在提交前运行 ESLint 并抛出错误，并阻止 git commit
-坑：要取消 lint 校验后自动修复，否则 lint 校验后自动修复成功后能 commit 成功
+   坑：要取消 lint 校验后自动修复，否则 lint 校验后自动修复成功后能 commit 成功
 
 #### 使用 lint-staged 检验与格式化暂存区文件
 
@@ -110,10 +133,35 @@ npx husky add .husky/pre-commit "npx lint-staged"
 ```
 
 3. 创建 lint-staged 配置文件 lint-staged.config.js，写入配置
+
 ```javascript
 module.exports = {
   '*.{css,scss,vue,js,ts,json}': 'prettier --write', // 使用prettier格式化并加入暂存
-  'src/**/*.{js,ts,vue}': "eslint --fix" // 使用eslint检验修复并加入暂存
+  'src/**/*.{js,ts,vue}': 'eslint --fix' // 使用eslint检验修复并加入暂存
 }
+```
 
+#### 使用 stylelint 对 css 进行校验修复
+
+1. 安装 stylelint 开发依赖 npm install -D -S stylelint
+
+2. 安装 stylelint 规则包 npm install -D -S stylelint-config-standard-scss stylelint-config-recommended-vue
+
+3. 新增 .stylelintrc.js 文件并使用 stylelint-config-standard 规则
+
+```javascript
+module.exports = {
+  extends: [
+    'stylelint-config-standard-scss',
+    'stylelint-config-recommended-vue/scss'
+  ]
+}
+```
+
+4. 配置 lint-staged.config.js 在 commit 前使用 stylelint 校验修复样式
+
+```javascript
+module.exports = {
+  '*.{css,scss,vue,less,vue}': 'stylelint --fix' // 使用stylelint校验修复并加入暂存
+}
 ```
