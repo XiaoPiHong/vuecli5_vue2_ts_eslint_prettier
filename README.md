@@ -95,4 +95,25 @@ npx husky add .husky/pre-commit "npm run lint"
 ```
 
 2. 如果有错误，git hooks 会在提交前运行 ESLint 并抛出错误，并阻止 git commit
-坑：要取消lint校验后自动修复，否则lint校验后自动修复成功后能commit成功
+坑：要取消 lint 校验后自动修复，否则 lint 校验后自动修复成功后能 commit 成功
+
+#### 使用 lint-staged 检验与格式化暂存区文件
+
+作用：lint-staged 优点是可以只处理暂存区的文件，还可以通过调用其他工具来对文件进行格式化处理
+
+1. 安装 lint-staged 开发依赖 npm i -D lint-staged -S
+
+2. 添加钩子
+
+```bash
+npx husky add .husky/pre-commit "npx lint-staged"
+```
+
+3. 创建 lint-staged 配置文件 lint-staged.config.js，写入配置
+```javascript
+module.exports = {
+  '*.{css,scss,vue,js,ts,json}': 'prettier --write', // 使用prettier格式化并加入暂存
+  'src/**/*.{js,ts,vue}': "eslint --fix" // 使用eslint检验修复并加入暂存
+}
+
+```
